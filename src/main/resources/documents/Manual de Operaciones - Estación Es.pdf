@@ -1,0 +1,16 @@
+Manual de Operaciones - Estación Espacial "Nova-7"
+
+
+Contenido:
+
+    Protocolo de Emergencia: Descompresión de Nivel 3
+    En caso de una caída de presión inferior a 0.8 bar en el Sector de Motores, la IA de la estación (AURA) debe sellar las compuertas térmicas en menos de 12 segundos.
+
+    Personal Autorizado:
+
+        Dra. Elara Vance (Jefa de Astrofísica) - Código de acceso: 77-Delta.
+
+        Ing. Jimmis J Simanca (Mantenimiento de Reactores) - Código de acceso: 92-Gamma.
+
+    Mantenimiento del Reactor de Fusión de Helio-3:
+    El enfriamiento debe realizarse cada 48 horas estándar utilizando el refrigerante criogénico tipo CX-900. Si la temperatura supera los 4,500 K, se debe iniciar el protocolo de eyección manual.

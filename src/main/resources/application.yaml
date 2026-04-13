@@ -1,0 +1,39 @@
+spring:
+  application:
+    name: hybrid-intel-orchestrator
+
+management:
+  info:
+    env:
+      enabled: true
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      base-path: /actuator
+      exposure:
+        include: health
+      cors:
+        allowed-origins: "*"
+        allowed-methods: "GET,OPTIONS"
+
+server:
+  address: 0.0.0.0
+  port: 5001
+  compression:
+    enable: true
+    min-respnse-size: 2048
+    mime-types: application/json,application/xml,text/html,text/xml,text/plain
+  servlet:
+    context-path: /api/v1
+
+info:
+  application:
+    groupId: "@project.groudId@"
+    artifactId: "@project.artifactId@"
+    version: "@project.version@"
+app:
+  documents-path: documents
+  service:
+    api-key: ${MY_API_KEY}
