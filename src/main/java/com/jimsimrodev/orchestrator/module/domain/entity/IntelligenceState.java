@@ -14,4 +14,5 @@ public class IntelligenceState {
     private String fuente;
     private String contexto;
     private String respuesta;
+    private String createdAt;
 }

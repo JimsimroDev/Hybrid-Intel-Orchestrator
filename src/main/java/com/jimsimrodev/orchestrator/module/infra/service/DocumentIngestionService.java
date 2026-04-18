@@ -3,14 +3,12 @@ package com.jimsimrodev.orchestrator.module.infra.service;
 import dev.langchain4j.data.document.Document;
 import dev.langchain4j.data.document.DocumentSplitter;
 import dev.langchain4j.data.document.loader.ClassPathDocumentLoader;
-import dev.langchain4j.data.document.loader.FileSystemDocumentLoader;
 import dev.langchain4j.data.document.splitter.DocumentSplitters;
 import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.store.embedding.EmbeddingStore;
 import dev.langchain4j.store.embedding.EmbeddingStoreIngestor;
 import jakarta.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -45,7 +43,7 @@ public class DocumentIngestionService {
                 .embeddingStore(store)         // Usamos el store inyectado
                 .build();
 
-        ingestor.ingest(documents); 
+        ingestor.ingest(documents);
         System.out.println("=== Documentos indexados correctamente ===");
     }
 }

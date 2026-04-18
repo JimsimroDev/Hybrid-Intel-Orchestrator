@@ -31,8 +31,8 @@ public class VectorStoreAdapter implements KnowledgeBasePort {
 
         EmbeddingSearchRequest searchRequest = EmbeddingSearchRequest.builder()
                 .queryEmbedding(embedding)
-                .maxResults(4)
-                .minScore(0.5)
+                .maxResults(6)
+                .minScore(0.7)
                 .build();
 
         EmbeddingSearchResult<TextSegment> result = store.search(searchRequest);

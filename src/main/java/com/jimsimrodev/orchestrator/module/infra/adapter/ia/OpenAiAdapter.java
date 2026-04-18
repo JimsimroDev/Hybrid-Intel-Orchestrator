@@ -18,41 +18,65 @@ public class OpenAiAdapter implements IntelligenceModelPort {
     public String classify(String pregunta) {
         String promt = String.format(
                 """
-                        Eres un clasificador. Dada la siguiente pregunta, decide si se debe
-                        responder buscando en los DOCUMENTOS LOCALES (PDFs cargados) o
-                        informaciones más generales en la WEB (internet).
-                          Reglas:
-                         - Responde SOLO con la palabra 'RAG' si la pregunta se refiere al contenido de documentos cargados
-                         - Responde SOLO con la palabra 'Web' si la pregunta requiere información actualizada, de temas generales, de la web
-
-                          Pregunta %s
-                         Respuesta (RAG o Web):""",
+                Actúa como un enrutador inteligente de consultas para un sistema híbrido.
+                Tu tarea es analizar la intención del usuario y clasificar la fuente de información más adecuada.
+               
+                FUENTES DISPONIBLES:
+                - 'RAG': Selecciona esta opción si la pregunta se refiere a documentos específicos del usuario, archivos PDF cargados, manuales internos, notas de clase o cualquier dato que parezca ser contenido privado/local.
+                - 'Web': Selecciona esta opción si la pregunta es sobre cultura general, noticias de actualidad, ayuda con código (StackOverflow/GitHub), conceptos científicos generales o cualquier información que se encuentre en internet.
+               
+                REGLAS DE SALIDA:
+                1. Responde ÚNICAMENTE con la palabra 'RAG' o 'Web'.
+                2. No incluyas puntos finales, ni explicaciones, ni espacios adicionales.
+                3. Si la pregunta es ambigua pero menciona "el documento", "el taller" o "mi archivo", prioriza 'RAG'.
+               
+                PREGUNTA DEL USUARIO:
+                "%s"
+               
+                CLASIFICACIÓN:""",
                 pregunta);
 
         return chatModel.chat(promt);
     }
 
     @Override
-    public String respuestaFinal(String fuente, String contexto, String pregunta) {
+    public String respuestaFinal(String fuente, String contexto, String pregunta, String createdAt) {
 
         String promt = String.format(
                 """
-                        Eres un asistente experto. Genera una respuesta completa y bien
-                        formateada en Markdown basándote en el contexto proporcionado.
+Actúa como un redactor técnico experto en Markdown. Tu objetivo es transformar el contexto proporcionado en una respuesta educativa, clara y profesional.
 
-                        Incluye: título (#), subtítulos (##), listas y negritas(*), Separadores visuales:
-                         Puedes usar --- en una línea sola para crear una línea horizontal divisoria entre una respuesta y al final de la respuesta.
-                         al final tambien agrega la fuente en negritas(*).
-                        Responde siempre en español.
+            ESTRUCTURA OBLIGATORIA DEL ARCHIVO (.md):
 
-                        fuente: %s\n
+            1. ENCABEZADO DE METADATOS:
+               - Inicia el documento con: `> **Fecha de creación:** %4$s`
+               - Añade una línea horizontal `---` inmediatamente después.
 
-                        Contexto: %s\n
+            2. CUERPO DE LA RESPUESTA:
+               - Título principal (#) que resuma la respuesta.
+               - Introducción breve.
+               - Usa subtítulos (##) para organizar los puntos clave.
+               - Utiliza listas con viñetas (-) o numeradas para procesos.
+               - Aplica negritas (**) para resaltar términos técnicos o conceptos vitales.
+               - Si incluyes fórmulas o conceptos matemáticos, asegúrate de que se vean claros.
 
-                        Pregunta: %s\n
+            3. CIERRE Y FUENTE:
+               - Añade otra línea horizontal `---` al finalizar el contenido.
+               - Finaliza el documento con: `**Fuente de información:** %1$s`
 
-                        Respuesta en Markdown:""",
-                fuente, contexto, pregunta);
+            REGLAS CRÍTICAS:
+            - Idioma: Español.
+            - Tono: Profesional y experto.
+            - No inventes información fuera del contexto proporcionado.
+            - No incluyes bloques de código de "Markdown" (```markdown), entrega el texto plano en formato Markdown directamente.
+
+            DATOS PARA PROCESAR:
+            Contexto: %2$s
+            Pregunta: %3$s
+
+            Respuesta en Markdown:
+            """,
+           fuente, contexto, pregunta, createdAt);
 
         return chatModel.chat(promt);
     }

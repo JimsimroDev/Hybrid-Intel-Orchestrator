@@ -3,3 +3,6 @@ services:
     build: .
     ports:
       - "5001:5001"
+    environment:
+      MY_API_KEY: ${MY_API_KEY}
+      FAST_API: ${FAST_API}

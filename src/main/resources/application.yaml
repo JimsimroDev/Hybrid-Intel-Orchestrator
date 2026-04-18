@@ -37,3 +37,4 @@ app:
   documents-path: documents
   service:
     api-key: ${MY_API_KEY}
+    fast-api: ${FAST_API}
