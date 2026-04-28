@@ -32,31 +32,48 @@ public class HybridOrchestratorUseCase implements AskHybridQuestionPort {
 
     @Override
     public AnswerResponseDTO execute(QuestionRequestDTO questionRequestDTO) {
-        var fuente = intelligenceModelPort.classify(questionRequestDTO.pregunta().trim().toUpperCase());
+        String pregunta = questionRequestDTO.pregunta();
 
-        var contexto = "";
+        // RAG-first routing:
+        // 1) Always try the vector store first.
+        // 2) If RAG yields no usable context, fall back to Web search.
+        // 3) If both fail, keep the original classifier decision for reporting.
+        String contextoRag = "";
+        try {
+            contextoRag = knowledgeBasePort.busqueda(pregunta);
+        } catch (RuntimeException ignored) {
+            // Keep routing resilient; web fallback will handle issues.
+        }
 
-         if (fuente.contains("RAG")) {
-        contexto = knowledgeBasePort.busqueda(questionRequestDTO.pregunta());
-         } else {
-         contexto = webedgeBasePort.busqueda(questionRequestDTO.pregunta());
-     }
+        boolean ragTieneContexto = contextoRag != null && !contextoRag.isBlank();
+
+        String fuente;
+        String contexto;
+
+        if (ragTieneContexto) {
+            fuente = "RAG";
+            contexto = contextoRag;
+        } else {
+            fuente = "Web";
+            contexto = webedgeBasePort.busqueda(pregunta);
+
+            // If web also returns nothing, report the classifier decision (best-effort),
+            // but still respond with whatever context we have.
+            if (contexto == null || contexto.isBlank()) {
+                fuente = intelligenceModelPort.classify(pregunta);
+            }
+        }
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyy - HH:mm:ss");
 
         String createdAt = LocalDateTime.now().format(formatter);
-        String respuestaFinal = intelligenceModelPort.respuestaFinal(fuente, contexto, questionRequestDTO.pregunta(), createdAt);
+        String respuestaFinal = intelligenceModelPort.respuestaFinal(fuente, contexto, pregunta, createdAt);
 
         Path ruta = Path.of(System.getProperty("user.dir"), "resultado_agente.md");
-
-
-       // String contenido = System.lineSeparator() + "## Esta respuesta fue creada el " + createdAt + System.lineSeparator()
-        //        + respuestaFinal + System.lineSeparator() + fuente + System.lineSeparator();
 
         try {
             Files.writeString(ruta, respuestaFinal, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 

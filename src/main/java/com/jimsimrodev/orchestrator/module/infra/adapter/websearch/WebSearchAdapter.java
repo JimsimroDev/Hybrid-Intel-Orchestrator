@@ -29,7 +29,7 @@ public class WebSearchAdapter implements WebedgeBasePort {
                 .uri(uriBuilder -> uriBuilder
                         .path("/search.json")
                         .queryParam("q",pregunta)
-                        .queryParam("api_key","7e82cb6ea186f83a1da0b77a0300ea582a5a3dc2fe5b1bd1dd2aed4f003180b2")
+                        .queryParam("api_key",fastApi)
                         .build())
                 .retrieve()
                 .bodyToMono(SerpResponse.class)
