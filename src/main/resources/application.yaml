@@ -14,9 +14,6 @@ management:
       base-path: /actuator
       exposure:
         include: health
-      cors:
-        allowed-origins: "https://orchestrator.jimsimrodev.uk"
-        allowed-methods: "GET,OPTIONS"
 
 server:
   address: 0.0.0.0
@@ -38,3 +35,7 @@ app:
   service:
     api-key: ${MY_API_KEY}
     fast-api: ${FAST_API}
+
+cors-settings:
+  url-production: ${URL_PRODUCTION}
+  url-production1: ${URL_PRODUCTION1}
