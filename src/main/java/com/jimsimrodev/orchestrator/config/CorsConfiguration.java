@@ -11,12 +11,9 @@ public class CorsConfiguration implements WebMvcConfigurer {
     @Value("${cors-settings.url-production}")
     private String urlProduction;
 
-    @Value("${cors-settings.url-production1}")
-    private String urlProduction1;
-
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**").allowedOrigins(urlProduction, urlProduction1)
+        registry.addMapping("/**").allowedOrigins(urlProduction)
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "CONNECT");
     }
 
